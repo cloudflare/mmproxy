@@ -1,0 +1,6 @@
+[submodule "libseccomp"]
+	path = libseccomp
+	url = https://github.com/seccomp/libseccomp.git
+[submodule "libmill"]
+	path = libmill
+	url = https://github.com/sustrik/libmill.git
