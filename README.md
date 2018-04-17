@@ -159,3 +159,8 @@ ip -6 route add local ::/0 dev lo table 100     # [+] VERIFIED
 [+] Listening on 0.0.0.0:2222
 ```
 
+Then you can locally test it with:
+
+```
+$ echo -en "PROXY TCP4 1.2.3.4 1.2.3.4 11 11\r\nHello World!" | nc -q3 -v 127.0.0.1 2222
+```
