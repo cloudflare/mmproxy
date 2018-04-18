@@ -56,7 +56,7 @@ Requirements
 
 mmproxy requires:
 
-  - To be run on the very server which runs the
+  - To be run on the every server which runs the
     application. Communication between mmproxy and the application
     must happen over loopback interface.
   - Root permissions. Alternatively - `CAP_NET_ADMIN` capability.
