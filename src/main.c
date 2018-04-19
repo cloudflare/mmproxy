@@ -571,6 +571,7 @@ int main(int argc, char *argv[])
 		ALLOW(fstat);
 
 		ALLOW(getrlimit);
+		ALLOW(prlimit64);
 		ALLOW(mmap);
 		ALLOW(brk);
 		ALLOW(mprotect);
@@ -584,6 +585,7 @@ int main(int argc, char *argv[])
 		ALLOW(epoll_create);
 		ALLOW(epoll_ctl);
 		ALLOW(epoll_wait);
+		ALLOW(epoll_pwait);
 		ALLOW(accept);
 		ALLOW(accept4);
 		ALLOW(getpeername);
