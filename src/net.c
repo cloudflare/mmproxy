@@ -33,8 +33,8 @@ ipaddr ipaddr_parse(const char *addr, int noport)
 afterport:
 	;
 	char host[255];
-	strncpy(host, addr, addr_len);
-	host[addr_len] = '\0';
+	memcpy(host, addr, MIN(addr_len, (int)sizeof(host)));
+	host[MIN(addr_len, (int)sizeof(host)-1)] = '\0';
 	if (strlen(host) > 0 && host[0] == '[' &&
 	    host[strlen(host) - 1] == ']') {
 		host[strlen(host) - 1] = '\0';
@@ -293,7 +293,7 @@ const char *net_str(network net)
 {
 	int i;
 	for (i = 0; i < 128; i++) {
-		if (FD_ISSET(i, (fd_set *)net.mask.data) == 0) {
+		if ((net.mask.data[i / 8] & ~(1 << (7 - i % 8))) == 0) {
 			break;
 		}
 	}

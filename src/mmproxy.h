@@ -32,6 +32,8 @@
 #define MSEC_NSEC(ms) ((ms)*1000000ULL)
 #define NSEC_MSEC(ns) ((ns) / 1000000UL)
 
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 typedef struct { uint8_t data[16]; } sixteen;
 typedef struct { sixteen addr; sixteen mask; } network;
 

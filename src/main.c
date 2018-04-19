@@ -230,7 +230,7 @@ static void usage()
 		"    mmproxy --allowed-networks allowed-networks.txt "
 		"-l 0.0.0.0:2222 -4 127.0.0.1:22 -6 [::1]:22\n"
 		"\n";
-	fprintf(stderr, fmt);
+	fprintf(stderr, "%s", fmt);
 	exit(-1);
 }
 
