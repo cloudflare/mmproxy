@@ -78,38 +78,40 @@ we deploy a custom routing table, which forces the return traffic to
 be routed to loopback.
 
 1) if traffic is forwarded to lo interface (127.0.0.1 / ::1 for exemple)
-    # 1. Route packets from lo address and lo interface to table 100
-    ip -4 rule add from 127.0.0.1/8 iif lo table 100
-    ip -6 rule add from ::1/128 iif lo table 100
 
-    # 2. In routing table=100 treat all IP addresses as bound to
-    # loopback, and pass them to network stack for processing:
-    ip route add local 0.0.0.0/0 dev lo table 100
-    ip -6 route add local ::/0 dev lo table 100
+       # 1. Route packets from lo address and lo interface to table 100
+       ip -4 rule add from 127.0.0.1/8 iif lo table 100
+       ip -6 rule add from ::1/128 iif lo table 100
+
+       # 2. In routing table=100 treat all IP addresses as bound to
+       # loopback, and pass them to network stack for processing:
+       ip route add local 0.0.0.0/0 dev lo table 100
+       ip -6 route add local ::/0 dev lo table 100
 
 2) if traffic is forwarded to any other interface
-    # 1. Check if you have a default route for ipv4 / ipv6
-    # if you don't have any default route response will be dropped before #4 & #5
 
-    # 2. Enable route_localnet on your default interface
-    echo 1 > /proc/sys/net/ipv4/conf/eth0/route_localnet
+       # 1. Check if you have a default route for ipv4 / ipv6
+       # if you don't have any default route response will be dropped before #4 & #5
 
-    # 3. Save conntrack CONNMARK on packets sent with MARK 123.
-    iptables -t mangle -I PREROUTING -m mark --mark 123 -m comment --comment mmproxy -j CONNMARK --save-mark
-    ip6tables -t mangle -I PREROUTING -m mark --mark 123 -m comment --comment mmproxy -j CONNMARK --save-mark
+       # 2. Enable route_localnet on your default interface
+       echo 1 > /proc/sys/net/ipv4/conf/eth0/route_localnet
 
-    # 4. Restore MARK on packets belonging to connections with conntrack CONNMARK 123.
-    iptables -t mangle -I OUTPUT -m connmark --mark 123 -m comment --comment mmproxy -j CONNMARK --restore-mark
-    ip6tables -t mangle -I OUTPUT -m connmark --mark 123 -m comment --comment mmproxy -j CONNMARK --restore-mark
+       # 3. Save conntrack CONNMARK on packets sent with MARK 123.
+       iptables -t mangle -I PREROUTING -m mark --mark 123 -m comment --comment mmproxy -j CONNMARK --save-mark
+       ip6tables -t mangle -I PREROUTING -m mark --mark 123 -m comment --comment mmproxy -j CONNMARK --save-mark
 
-    # 5. Route packets with MARK 123 to routing table 100
-    ip rule add fwmark 123 lookup 100
-    ip -6 rule add fwmark 123 lookup 100
+       # 4. Restore MARK on packets belonging to connections with conntrack CONNMARK 123.
+       iptables -t mangle -I OUTPUT -m connmark --mark 123 -m comment --comment mmproxy -j CONNMARK --restore-mark
+       ip6tables -t mangle -I OUTPUT -m connmark --mark 123 -m comment --comment mmproxy -j CONNMARK --restore-mark
 
-    # 6. In routing table=100 treat all IP addresses as bound to
-    # loopback, and pass them to network stack for processing:
-    ip route add local 0.0.0.0/0 dev lo table 100
-    ip -6 route add local ::/0 dev lo table 100
+       # 5. Route packets with MARK 123 to routing table 100
+       ip rule add fwmark 123 lookup 100
+       ip -6 rule add fwmark 123 lookup 100
+
+       # 6. In routing table=100 treat all IP addresses as bound to
+       # loopback, and pass them to network stack for processing:
+       ip route add local 0.0.0.0/0 dev lo table 100
+       ip -6 route add local ::/0 dev lo table 100
 
 
 Development
