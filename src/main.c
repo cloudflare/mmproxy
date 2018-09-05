@@ -217,7 +217,7 @@ static void usage()
 		" --mark MARK      Set specific MARK on outbound packets. "
 		"Needed to play with iptables.\n"
 		" --table TABLE    Use specific routing table number in "
-		"printed suggestion\n."
+		"printed suggestion.\n."
 		" --quiet          Don't print the iptables, routing and "
 		"system tuning suggestions.\n"
 		" --verbose        Print detailed logs on stdout.\n"
