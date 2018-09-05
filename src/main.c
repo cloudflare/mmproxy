@@ -124,6 +124,8 @@ coroutine void new_connection(int cd, struct state *state)
 		goto parseerror;
 	}
 
+	free(words);
+
 	char rstr[IPADDR_MAXSTRLEN + 7];
 	ipaddrstr_port(remote_addr, rstr);
 
@@ -159,6 +161,7 @@ coroutine void new_connection(int cd, struct state *state)
 	do_proxy_half_duplex(rs, cd, ch);
 	err = chr(ch, int);
 	chr(ch, int);
+	free(ch);
 
 disconnected:
 	fdclean(cd);
@@ -188,6 +191,7 @@ void do_accept(tcpsock sd, struct state *state)
 		}
 
 		go(new_connection(tcpsock_fd(cd), state));
+		free(cd);
 	}
 }
 
