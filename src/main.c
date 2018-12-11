@@ -134,9 +134,11 @@ coroutine void new_connection(int cd, struct state *state)
 		goto parseerror;
 	}
 
-	printf("[+] %s connected, proxy protocol source %s, local destination "
-	       "%s\n",
-	       lstr, ipaddrstr_port(client_addr, NULL), rstr);
+	if (state->verbose) {
+		printf("[+] %s connected, proxy protocol source %s, local destination "
+		       "%s\n",
+		       lstr, ipaddrstr_port(client_addr, NULL), rstr);
+	}
 	int rs = tcpconnect_spoofed(client_addr, remote_addr, -1, state->mark);
 	if (rs < 0) {
 		printf("[-] %s to %s failed %s\n", lstr, rstr, strerror(errno));
@@ -168,7 +170,7 @@ disconnected:
 	close(cd);
 	fdclean(rs);
 	close(rs);
-	printf("[-] %s disconnected: %s\n", lstr, strerror(err));
+	if (state->verbose) printf("[-] %s disconnected: %s\n", lstr, strerror(err));
 	return;
 
 parseerror:
