@@ -1,15 +1,14 @@
 #include <getopt.h>
+#include <libmill.h>
+#include <seccomp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <seccomp.h>
-#include <libmill.h>
 
 #include "mmproxy.h"
 
-struct state
-{
+struct state {
 	int verbose;
 	int quiet;
 	int do_not_sandbox;
@@ -135,7 +134,8 @@ coroutine void new_connection(int cd, struct state *state)
 	}
 
 	if (state->verbose) {
-		printf("[+] %s connected, proxy protocol source %s, local destination "
+		printf("[+] %s connected, proxy protocol source %s, local "
+		       "destination "
 		       "%s\n",
 		       lstr, ipaddrstr_port(client_addr, NULL), rstr);
 	}
@@ -170,7 +170,8 @@ disconnected:
 	close(cd);
 	fdclean(rs);
 	close(rs);
-	if (state->verbose) printf("[-] %s disconnected: %s\n", lstr, strerror(err));
+	if (state->verbose)
+		printf("[-] %s disconnected: %s\n", lstr, strerror(err));
 	return;
 
 parseerror:
@@ -409,9 +410,10 @@ int main(int argc, char *argv[])
 				: "[!] CHECK FAILED");
 		fprintf(stderr,
 			"ip route add local 0.0.0.0/0 dev lo table %u\t# %s\n",
-			state->table, check_ip_route(0, state->table) == 0
-					      ? "[+] VERIFIED"
-					      : "[!] CHECK FAILED");
+			state->table,
+			check_ip_route(0, state->table) == 0
+				? "[+] VERIFIED"
+				: "[!] CHECK FAILED");
 
 		fprintf(stderr, "ip -6 rule add fwmark %d lookup %d\t\t# %s\n",
 			state->mark, state->table,
@@ -420,9 +422,10 @@ int main(int argc, char *argv[])
 				: "[!] CHECK FAILED");
 		fprintf(stderr,
 			"ip -6 route add local ::/0 dev lo table %u\t# %s\n",
-			state->table, check_ip_route(1, state->table) == 0
-					      ? "[+] VERIFIED"
-					      : "[!] CHECK FAILED");
+			state->table,
+			check_ip_route(1, state->table) == 0
+				? "[+] VERIFIED"
+				: "[!] CHECK FAILED");
 	}
 
 	ipaddr targets[2];

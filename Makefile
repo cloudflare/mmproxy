@@ -1,11 +1,7 @@
 CC       ?= clang
 LDOPTS   += -Wl,-z,now -Wl,-z,relro
-COPTSWARN = -Wall -Wextra -Wno-unused-parameter -Wpointer-arith -Werror
+COPTSWARN = -Wall -Wextra -Wno-unused-parameter -Wpointer-arith
 COPTSSEC  = -D_FORTIFY_SOURCE=2
-
-ifeq ($(CC), cc)
-	CC = clang
-endif
 
 ifeq ($(CC), clang)
 	COPTSSEC+=-fstack-protector-strong
@@ -55,7 +51,7 @@ libseccomp/src/.libs/libseccomp.a: libseccomp/src/*c
 
 .PHONY: format
 format:
-	clang-format-3.5 -i src/*.c
+	clang-format -i src/*.c
 	@grep -n "TODO" src/*.[ch]
 
 .PHONY: cloudflare-ip-ranges.txt

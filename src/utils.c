@@ -1,13 +1,13 @@
+#include <fcntl.h>
 #include <getopt.h>
+#include <libmill.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/resource.h>
-#include <fcntl.h>
 
-#include <libmill.h>
 #include "mmproxy.h"
 
 int iplen(ipaddr addr)
@@ -228,8 +228,7 @@ fdclean_error:
 	errno = err;
 	return -1;
 
-error:
-	;
+error:;
 	err = errno;
 	close(s);
 	errno = err;

@@ -1,13 +1,13 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <getopt.h>
+#include <libmill.h>
 #include <netinet/tcp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
 
-#include <libmill.h>
 #include "mmproxy.h"
 
 // Parse host:port.
@@ -30,11 +30,10 @@ ipaddr ipaddr_parse(const char *addr, int noport)
 	}
 	addr_len = colon - addr > 254 ? 254 : colon - addr;
 
-afterport:
-	;
+afterport:;
 	char host[255];
 	memcpy(host, addr, MIN(addr_len, (int)sizeof(host)));
-	host[MIN(addr_len, (int)sizeof(host)-1)] = '\0';
+	host[MIN(addr_len, (int)sizeof(host) - 1)] = '\0';
 	if (strlen(host) > 0 && host[0] == '[' &&
 	    host[strlen(host) - 1] == ']') {
 		host[strlen(host) - 1] = '\0';
