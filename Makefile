@@ -56,4 +56,4 @@ format:
 
 .PHONY: cloudflare-ip-ranges.txt
 cloudflare-ip-ranges.txt:
-	curl -s https://www.cloudflare.com/ips-v4 https://www.cloudflare.com/ips-v6 > cloudflare-ip-ranges.txt
+	curl -s https://www.cloudflare.com/ips-v4 https://www.cloudflare.com/ips-v6 | sort > cloudflare-ip-ranges.txt

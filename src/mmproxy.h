@@ -49,6 +49,7 @@ int check_ip_rule(int ipv6, uint32_t mark, uint32_t table);
 int check_ip_route(int ipv6, uint32_t table);
 int set_nofile_max();
 int read_subnets(const char *fname, network **ptr_networks, int *ptr_networks_len);
+unsigned argv_len(const char **argv);
 
 /* net.c */
 ipaddr ipaddr_parse(const char *addr, int noport);
@@ -64,7 +65,6 @@ network net_make(ipaddr addr, int prefix_len);
 const char *net_str(network net);
 int net_find_match(network *networks, int networks_len, ipaddr addr);
 int ipport(ipaddr addr);
-
 
 
 #ifndef IP_TRANSPARENT

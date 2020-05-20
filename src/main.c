@@ -80,8 +80,9 @@ coroutine void new_connection(int cd, struct state *state)
 		return;
 	}
 
-	/* Chop buf on \r\n. */
+	const char **words = NULL;
 
+	/* Chop buf on \r\n. */
 	char *nl = memchr(buf, '\n', rbytes);
 	if (nl == NULL) {
 		goto parseerror;
@@ -95,7 +96,10 @@ coroutine void new_connection(int cd, struct state *state)
 	buf[nbytes - 1] = '\0';
 	buf[nbytes] = '\0';
 
-	const char **words = parse_argv(buf, ' ');
+	words = parse_argv(buf, ' ');
+	if (argv_len(words) != 6) {
+		goto parseerror;
+	}
 	if (strcasecmp(words[0], "PROXY") != 0) {
 		goto parseerror;
 	}
@@ -122,8 +126,6 @@ coroutine void new_connection(int cd, struct state *state)
 	} else {
 		goto parseerror;
 	}
-
-	free(words);
 
 	char rstr[IPADDR_MAXSTRLEN + 7];
 	ipaddrstr_port(remote_addr, rstr);
@@ -166,6 +168,7 @@ coroutine void new_connection(int cd, struct state *state)
 	free(ch);
 
 disconnected:
+	free(words);
 	fdclean(cd);
 	close(cd);
 	fdclean(rs);
@@ -176,6 +179,7 @@ disconnected:
 
 parseerror:
 	printf("[?] %s broke with bad proxy-protocol header\n", lstr);
+	free(words);
 	fdclean(cd);
 	close(cd);
 	return;
