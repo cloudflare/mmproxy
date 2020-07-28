@@ -77,7 +77,7 @@ the response packets to the default route (internet). To work around
 we deploy a custom routing table, which forces the return traffic to
 be routed to loopback.
 
-1) if traffic is forwarded to lo interface (127.0.0.1 / ::1 for exemple)
+1) If traffic is forwarded to the "lo" interface (127.0.0.1 / ::1 for example):
 
        # 1. Route packets from lo address and lo interface to table 100
        ip -4 rule add from 127.0.0.1/8 iif lo table 100
@@ -88,12 +88,13 @@ be routed to loopback.
        ip route add local 0.0.0.0/0 dev lo table 100
        ip -6 route add local ::/0 dev lo table 100
 
-2) if traffic is forwarded to any other interface
+2) Or, if traffic is forwarded to any other interface:
 
        # 1. Check if you have a default route for ipv4 / ipv6
        # if you don't have any default route response will be dropped before #4 & #5
 
        # 2. Enable route_localnet on your default interface
+       # substitute "eth0" in the path below, if needed
        echo 1 > /proc/sys/net/ipv4/conf/eth0/route_localnet
 
        # 3. Save conntrack CONNMARK on packets sent with MARK 123.
@@ -118,7 +119,7 @@ Development
 -----------
 
 
-    git clone  https://github.com/xxx/mmproxy.git
+    git clone https://github.com/cloudflare/mmproxy.git
     cd mmproxy
     git submodule update --init
     make
