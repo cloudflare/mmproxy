@@ -134,7 +134,7 @@ Help message:
 ./mmproxy  --help
 Usage:
 
-    mmproxy [ options ] --allowed-subnets FILE -l LISTEN_ADDR -4 TARGET_V4_ADDR -6 TARGET_V6_ADDR
+    mmproxy [ options ] --allowed-networks FILE -l LISTEN_ADDR -4 TARGET_V4_ADDR -6 TARGET_V6_ADDR
 
 mmproxy binds to given TCP LISTEN_ADDR (default [::]:8080) and accepts
 inbound TCP connections. The inbound connections MUST have a proxy-protocol
@@ -142,16 +142,16 @@ version 1 header, and MUST be originated from set of given source IP's.
 The traffic will be magically spoofed to look like it came from real client IP.
  LISTEN_ADDR      Address to bind to. In form like [::]:8080
  TARGET_ADDR      Address to forward traffic to. In form like [::]:80
- --allowed-subnets FILE Load allowed IP subnets from given file.
+ --allowed-networks FILE Load allowed IP subnets from given file.
  --mark MARK      Set specific MARK on outbound packets. Needed to play with iptables.
- --table TABLE    Use specific routing table number in printed suggestion
+ --table TABLE    Use specific routing table number in printed suggestion.
 . --quiet          Don't print the iptables, routing and system tuning suggestions.
  --verbose        Print detailed logs on stdout.
 
 This runs mmproxy on port 2222, unpacks the proxy-protocol header
 and forwards the traffic to 127.0.0.1:22 on TCP:
 
-    echo -en "0.0.0.0/0\n::/0\n" > allowed-networks.txt
+    echo "0.0.0.0/0" > allowed-networks.txt
     mmproxy --allowed-networks allowed-networks.txt -l 0.0.0.0:2222 -4 127.0.0.1:22 -6 [::1]:22
 ```
 
